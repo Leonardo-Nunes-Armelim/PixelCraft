@@ -1,7 +1,10 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef MAIN_WINDOW_H
+#define MAIN_WINDOW_H
 
 #include <QMainWindow>
+
+#include <QGraphicsView>
+#include <QGraphicsScene>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -19,5 +22,10 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    QGraphicsView *view;
+    QGraphicsScene *scene;
+
+protected:
+    void mousePressEvent(QMouseEvent* event) override;
 };
-#endif // MAINWINDOW_H
+#endif // MAIN_WINDOW_H

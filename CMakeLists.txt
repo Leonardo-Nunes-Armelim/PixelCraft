@@ -16,9 +16,9 @@ set(TS_FILES PixelCraft_pt_BR.ts)
 
 set(PROJECT_SOURCES
         main.cpp
-        mainwindow.cpp
-        mainwindow.h
-        mainwindow.ui
+        ui/main_window.cpp
+        ui/main_window.h
+        ui/main_window.ui
         ${TS_FILES}
 )
 
@@ -26,6 +26,11 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(PixelCraft
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
+        ui/canvas_view.h ui/canvas_view.cpp
+        ui/canvas_scene.h ui/canvas_scene.cpp
+
+        core/canvas_layer_item.h core/canvas_layer_item.cpp
+
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET PixelCraft APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
