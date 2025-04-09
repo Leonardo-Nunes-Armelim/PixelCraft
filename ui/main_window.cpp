@@ -1,11 +1,15 @@
 #include "main_window.h"
 #include "./ui_main_window.h"
-//#include "core/canvas_layer_item.h"
-//#include "ui/canvas_scene.h"
-//#include "ui/canvas_view.h"
+
+#include "../core/canvas_layer_item.h"
+#include "canvas_scene.h"
+#include "canvas_view.h"
+
 #include <QMouseEvent>
 #include <QGraphicsRectItem>
 #include <QVBoxLayout>
+
+//#include <iostream>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -13,14 +17,16 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    scene = new QGraphicsScene(this);
-    view = new QGraphicsView(scene, this);
-    view->setSceneRect(0, 0, 320, 240);
-    view->setRenderHint(QPainter::Antialiasing, false);
-    view->setDragMode(QGraphicsView::NoDrag);
+    setupCanvas();
 
-    setCentralWidget(view);
-    resize(400, 300);
+    //scene = new QGraphicsScene(this);
+    //view = new QGraphicsView(scene, this);
+    //view->setSceneRect(0, 0, 320, 240);
+    //view->setRenderHint(QPainter::Antialiasing, false);
+    //view->setDragMode(QGraphicsView::NoDrag);
+
+    //setCentralWidget(view);
+    //resize(400, 300);
 }
 
 MainWindow::~MainWindow()
@@ -28,26 +34,36 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::mousePressEvent(QMouseEvent* event)
+void MainWindow::setupCanvas()
 {
-    QPoint viewPos = event->pos();
-    QPointF scenePos = view->mapToScene(viewPos);
+    canvasScene = new CanvasScene(this);
+    canvasView = new CanvasView(this);
+    canvasView->setScene(canvasScene);
 
-    int gridSize = 10;
-    int x = static_cast<int>(scenePos.x()) / gridSize * gridSize;
-    int y = static_cast<int>(scenePos.y()) / gridSize * gridSize;
+    canvasView->setDragMode(QGraphicsView::NoDrag);
 
-    auto* rect = scene->addRect(x, y, gridSize, gridSize, QPen(Qt::black), QBrush(Qt::blue));
-    rect->setZValue(1);
+    canvasLayer = new CanvasLayerItem(512, 512);
+    canvasScene->addItem(canvasLayer);
+
+    // Conecta o sinal da cena com a ação de desenhar no layer
+    connect(canvasScene, &CanvasScene::pixelDrawn, this, [=](int x, int y) {
+        canvasLayer->drawPixel(x, y, Qt::black);
+    });
+
+    // Adiciona o canvasView à interface
+    setCentralWidget(canvasView);
 }
 
-//auto* scene = new CanvasScene(this);
-//auto* view = new CanvasView(this);
-//view->setScene(scene);
+
+//void MainWindow::mousePressEvent(QMouseEvent* event)
+//{
+//    QPoint viewPos = event->pos();
+//    QPointF scenePos = view->mapToScene(viewPos);
 //
-//auto* layer = new CanvasLayerItem(128, 128);
-//scene->addItem(layer);
+//    int gridSize = 10;
+//    int x = static_cast<int>(scenePos.x()) / gridSize * gridSize;
+//    int y = static_cast<int>(scenePos.y()) / gridSize * gridSize;
 //
-//connect(scene, &CanvasScene::pixelDrawn, [=](int x, int y) {
-//    layer->drawPixel(x, y, Qt::black);
-//});
+//    auto* rect = scene->addRect(x, y, gridSize, gridSize, QPen(Qt::black), QBrush(Qt::blue));
+//    rect->setZValue(1);
+//}

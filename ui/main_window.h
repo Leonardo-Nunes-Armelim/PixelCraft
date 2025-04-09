@@ -6,6 +6,10 @@
 #include <QGraphicsView>
 #include <QGraphicsScene>
 
+class CanvasScene;
+class CanvasView;
+class CanvasLayerItem;
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
@@ -22,10 +26,16 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    QGraphicsView *view;
-    QGraphicsScene *scene;
+    //QGraphicsView *view;
+    //QGraphicsScene *scene;
 
-protected:
-    void mousePressEvent(QMouseEvent* event) override;
+    void setupCanvas();
+
+    CanvasView *canvasView = nullptr;
+    CanvasScene *canvasScene = nullptr;
+    CanvasLayerItem *canvasLayer = nullptr;
+
+//protected:
+    //void mousePressEvent(QMouseEvent* event) override;
 };
 #endif // MAIN_WINDOW_H
