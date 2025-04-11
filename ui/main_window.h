@@ -35,7 +35,7 @@ private:
     CanvasScene *canvasScene = nullptr;
     CanvasLayerItem *canvasLayer = nullptr;
 
-//protected:
-    //void mousePressEvent(QMouseEvent* event) override;
+protected:
+    void mousePressEvent(QMouseEvent* event) override;
 };
 #endif // MAIN_WINDOW_H

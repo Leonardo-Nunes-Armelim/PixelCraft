@@ -8,6 +8,10 @@
 #include <QMouseEvent>
 #include <QGraphicsRectItem>
 #include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QWidget>
+#include <QSplitter>
+#include <QPushButton>
 
 //#include <iostream>
 
@@ -36,24 +40,75 @@ MainWindow::~MainWindow()
 
 void MainWindow::setupCanvas()
 {
+    // Configuring centralwidget
+    QVBoxLayout *layout = new QVBoxLayout(ui->centralwidget);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
+
+    // Contextual toolbar
+    QWidget *tool_context_bar = new QWidget(this);
+    tool_context_bar->setFixedHeight(50);
+    tool_context_bar->setStyleSheet("background-color: gray;");
+
+    // Horizontal block
+
+    QSplitter *splitter = new QSplitter(Qt::Horizontal, this);
+    QWidget *leftPane = new QWidget();
+    QPushButton *btn_1 = new QPushButton("btn 1");
+    QPushButton *btn_2 = new QPushButton("btn 2");
+    QPushButton *btn_3 = new QPushButton("btn 3");
+    QVBoxLayout *leftLayout = new QVBoxLayout(leftPane);
+    leftLayout->addWidget(btn_1);
+    leftLayout->addWidget(btn_2);
+    leftLayout->addWidget(btn_3);
+
     canvasScene = new CanvasScene(this);
     canvasView = new CanvasView(this);
     canvasView->setScene(canvasScene);
-
     canvasView->setDragMode(QGraphicsView::NoDrag);
-
-    canvasLayer = new CanvasLayerItem(512, 512);
+    canvasLayer = new CanvasLayerItem(128, 128);
     canvasScene->addItem(canvasLayer);
 
-    // Conecta o sinal da cena com a ação de desenhar no layer
+    splitter->addWidget(leftPane);
+    splitter->addWidget(canvasView);
+
     connect(canvasScene, &CanvasScene::pixelDrawn, this, [=](int x, int y) {
         canvasLayer->drawPixel(x, y, Qt::black);
     });
 
-    // Adiciona o canvasView à interface
-    setCentralWidget(canvasView);
+    layout->addWidget(tool_context_bar);
+    layout->addWidget(splitter);
+
+
+    //draw_frame = new QWidget(this);
+
+    //canvasView->setParent(ui->frame);
+    //canvasView->setGeometry(ui->frame->rect());
+    //canvasView->show();
+
+//    QSplitter *splitter = new QSplitter(Qt::Horizontal, this);
+//
+//    QWidget *leftPane = new QWidget();
+//    QVBoxLayout *leftLayout = new QVBoxLayout(leftPane);
+//    leftLayout->addWidget(ui->pushButton);
+//    leftLayout->addWidget(ui->pushButton_2);
+//
+//    CanvasView *canvasView = new CanvasView(this);
+//    canvasView->setScene(canvasScene);
+//
+//    splitter->addWidget(leftPane);     // Lado esquerdo (botões)
+//    splitter->addWidget(canvasView);   // Lado direito (canvas)
+//
+//    setCentralWidget(splitter);
+
+    layout->addStretch();
+
 }
 
+void MainWindow::mousePressEvent(QMouseEvent* event)
+{
+
+}
 
 //void MainWindow::mousePressEvent(QMouseEvent* event)
 //{
