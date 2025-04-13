@@ -18,7 +18,6 @@ set(PROJECT_SOURCES
         main.cpp
         ui/main_window.cpp
         ui/main_window.h
-        ui/main_window.ui
         ${TS_FILES}
 )
 
