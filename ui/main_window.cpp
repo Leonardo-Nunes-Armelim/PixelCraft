@@ -11,6 +11,9 @@
 #include <QWidget>
 #include <QSplitter>
 #include <QPushButton>
+#include <QMenu>
+#include <QMenuBar>
+#include <QStatusBar>
 
 //#include <iostream>
 
@@ -20,21 +23,61 @@ MainWindow::MainWindow(QWidget *parent)
     this->resize(1280, 720);
     //this->showMaximized();
 
-    // Central Widget
+    // ========== Menu Bar ==========
+    QMenuBar *menu_bar = new QMenuBar(this);
+
+    // File
+    QMenu *file_menu = new QMenu("File", this);
+    QAction *new_action = new QAction("New", this);
+    QAction *open_action = new QAction("Open", this);
+    QAction *save_action = new QAction("Save", this);
+    QAction *exit_action = new QAction("Exit", this);
+    connect(exit_action, &QAction::triggered, this, &QMainWindow::close);
+
+    file_menu->addAction(new_action);
+    file_menu->addAction(open_action);
+    file_menu->addAction(save_action);
+    file_menu->addSeparator();
+    file_menu->addAction(exit_action);
+
+    // Edit
+    QMenu *edit_menu = new QMenu("Edit", this);
+    QAction *undo_action = new QAction("Undo", this);
+    QAction *redo_action = new QAction("Redo", this);
+    edit_menu->addAction(undo_action);
+    edit_menu->addAction(redo_action);
+
+    // Help
+    QMenu *help_menu = new QMenu("Help", this);
+    QAction *about_action = new QAction("About", this);
+    help_menu->addAction(about_action);
+
+    menu_bar->addMenu(file_menu);
+    menu_bar->addMenu(edit_menu);
+    menu_bar->addMenu(help_menu);
+
+    this->setMenuBar(menu_bar);
+
+    // ========== Status Bar ==========
+    QStatusBar *status_bar = new QStatusBar(this);
+    status_bar->showMessage("Ready");
+    this->setStatusBar(status_bar);
+
+    // ========== Central Widget ==========
     QWidget *central_widget = new QWidget(this);
     this->setCentralWidget(central_widget);
 
-    // Configuring Central Widget
+    // ========== Configuring Central Widget ==========
     QVBoxLayout *layout = new QVBoxLayout(central_widget);
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0);
 
-    // Contextual tool bar
+    // ========== Contextual tool bar ==========
     QWidget *context_tool_bar = new QWidget(this);
     context_tool_bar->setFixedHeight(50);
     context_tool_bar->setStyleSheet("background-color: gray;");
 
-    // Center left widget
+    // ========== Center left widget ==========
     QWidget *tools_and_canvas_parent_widget = new QWidget();
     QHBoxLayout *tools_and_canvas_layout = new QHBoxLayout(tools_and_canvas_parent_widget);
     QWidget *tool_bar = new QWidget(this);
@@ -55,6 +98,8 @@ MainWindow::MainWindow(QWidget *parent)
     });
 
     tools_and_canvas_layout->addWidget(canvas_view);
+
+    // ========== Lower bar splitter ==========
 
     // Animations panel
     QWidget *animations = new QWidget();
@@ -80,7 +125,6 @@ MainWindow::MainWindow(QWidget *parent)
     playback->setMinimumHeight(200);
     playback->setStyleSheet("background-color: green;");
 
-    // Lower bar splitter
     QSplitter *lower_bar_splitter = new QSplitter(Qt::Horizontal, this);
     lower_bar_splitter->addWidget(animations);
     lower_bar_splitter->addWidget(frame_edit);
@@ -89,12 +133,12 @@ MainWindow::MainWindow(QWidget *parent)
     lower_bar_splitter->setCollapsible(1, false);
     lower_bar_splitter->setCollapsible(3, false);
 
-    // Center splitter
+    // ========== Center splitter ==========
     QSplitter *center_splitter = new QSplitter(Qt::Vertical, this);
     center_splitter->addWidget(tools_and_canvas_parent_widget);
     center_splitter->addWidget(lower_bar_splitter);
 
-    // Right side panel splitter
+    // ========== Right side panel splitter ==========
     QWidget *preview_panel = new QWidget();
     preview_panel->setMinimumHeight(100);
     preview_panel->setMinimumWidth(200);
@@ -124,7 +168,7 @@ MainWindow::MainWindow(QWidget *parent)
     right_side_panel_splitter->setCollapsible(3, false);
     right_side_panel_splitter->setCollapsible(4, false);
 
-    // Main splitter
+    // ========== Main splitter ==========
     QSplitter *main_splitter = new QSplitter(Qt::Horizontal, this);
     main_splitter-> addWidget(center_splitter);
     main_splitter->addWidget(right_side_panel_splitter);
